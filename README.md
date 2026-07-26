@@ -1,96 +1,115 @@
-# agent-kb-toolkit
+<div align="center">
 
-> A set of agent skills that turn any coding-agent harness (Qoder / Claude Code / OpenCode / Codex …) into a disciplined **personal knowledge-base builder** over a plain Markdown directory — no vector database required.
->
-> 一套 agent skill,把任意 agent harness 变成纪律严明的**个人知识库工具链**,直接作用于一个 Markdown 目录,起步无需向量库。
+# 🧰 agent-kb-toolkit
 
-`SKILL.md`-based, model-agnostic, works with any tool that discovers skills from `~/.agents/skills/`, `~/.claude/skills/`, or via [`npx skills`](https://github.com/vercel-labs/skills).
+**Turn any coding-agent harness into a disciplined personal knowledge-base builder.**
+
+Plain Markdown in → curated, textbook-grade notes out. No vector database required.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](#-quick-start)
+[![SKILL.md](https://img.shields.io/badge/SKILL.md-compatible-8A2BE2.svg)](https://agentskills.io)
+[![Works with](https://img.shields.io/badge/works%20with-Qoder%20·%20Claude%20Code%20·%20OpenCode-orange.svg)](#-portability)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing)
+
+**English** · [简体中文](README.zh-CN.md)
+
+</div>
 
 ---
 
-## Why (design philosophy)
+## ✨ Why this exists
 
-Knowledge work with an agent has two distinct jobs that people usually conflate. This toolkit keeps them separate:
+Knowledge work with an agent is really **two different jobs** that most tools conflate:
 
-- **Curation(策展)** — a human/LLM *judges* what matters and writes it up. Costs tokens, needs judgment.
-- **Transcription(转录)** — *mechanically* copy raw sessions verbatim. Zero tokens, needs determinism, not an LLM.
+|  | Curation(策展) | Transcription(转录) |
+|---|---|---|
+| What | *Judge* what matters, write it up properly | *Mechanically* copy sessions verbatim |
+| Who should do it | LLM (judgment required) | Script (determinism required) |
+| Token cost | Worth paying | **~0** |
 
-The core rule the whole toolkit follows:
+This toolkit keeps them separate, following one rule everywhere:
 
-> **一句话约定进 Memory,多步流程进 Skill,机械活写脚本,必然发生挂 Hook。**
-> *Rules → Memory · Workflows → Skill · Deterministic work → scripts · Inevitable events → Hooks.*
+> **Rules → Memory · Workflows → Skills · Deterministic work → scripts · Inevitable events → Hooks.**
 
-That is why deterministic parts (backup, dedup search) are plain Python scripts (0 tokens), and only the judgment parts run as LLM skills.
+Backups and dedup search run as plain Python scripts (zero tokens, verbatim-faithful). Only the parts that genuinely need judgment run as LLM skills.
 
-## The three skills
+## 🧩 The three skills
 
-| Skill | Line | Job | Cost |
+| Skill | Line | What it does | Cost |
 |---|---|---|---|
-| **save-to-kb** | curation (quick) | Curate a conversation into properly-formatted notes; write-time dedup; compaction-safe | low |
-| **expand-note** | curation (deep) | Deepen one note (or a new topic) into textbook-grade content via multi-source web research | high (research) |
-| **archive-sessions** | transcription | Verbatim-export session transcripts of each harness to Markdown backups | **~0 tokens** |
+| 📝 **save-to-kb** | curation · quick | Curate a conversation into properly-formatted notes — write-time dedup, MOC index upkeep, compaction-safe | low |
+| 📚 **expand-note** | curation · deep | Deepen one note into **textbook-grade** content (principles, examples & counter-examples, FAQ, self-test) via multi-source web research | high |
+| 💾 **archive-sessions** | transcription | Verbatim-export every session transcript to Markdown backups — self-extending adapters, self-installing hooks | **~0 tokens** |
 
+## 🏗️ How it works
+
+```mermaid
+flowchart LR
+    U([You]) --> H["Agent harness<br/>(Qoder · Claude Code · OpenCode …)"]
+    H -->|"curation — LLM judgment"| S["📝 save-to-kb<br/>quick notes"]
+    S -->|"deepen on demand"| E["📚 expand-note<br/>textbook-grade"]
+    H -->|"transcription — script, ~0 tokens"| A["💾 archive-sessions<br/>verbatim backups"]
+    S --> KB[("$KB_ROOT<br/>Markdown knowledge base")]
+    E --> KB
+    A --> BK[("~/sessionbackup/")]
+    BK -.->|"compaction guard<br/>re-grounds curation"| S
 ```
-                你 / You
-                   │  (natural language)
-        ┌──────────┴───────────┐
-   curation line          transcription line
-   (LLM judgment)         (deterministic script)
-        │                      │
-  save-to-kb  ──deepen──▶ expand-note      archive-sessions
-        │                      │                  │
-        ▼                      ▼                  ▼
-   $KB_ROOT (Markdown KB, MOC-indexed)      ~/sessionbackup/<harness>/
-        └── grep/read = agentic retrieval ──┘   (feeds compaction-guard)
-```
 
-Design notes baked in: **write-before-dedup** keeps recording cost `O(candidates)` not `O(KB)`; **compaction guard** re-grounds curation against on-disk transcripts when context was compacted; **self-extending** adapters + **self-installing** hook recipes let `archive-sessions` grow to new harnesses on its own.
+Design details baked in:
 
-## Requirements
+- **Write-time dedup** — a script shortlists candidate notes first, so recording cost stays `O(candidates)`, not `O(knowledge base)`.
+- **Compaction guard** — when context was compacted, curation re-grounds itself against on-disk transcripts instead of trusting compressed memory.
+- **Self-extending** — meets an unknown harness? The skill guides the agent to write a new adapter and register it.
+- **Self-installing hooks** — per-harness auto-backup recipes ship inside the skill, installed **only after showing you the exact config and getting your confirmation**.
 
-- Python 3.8+ (standard library only — no pip installs)
-- Any agent harness that loads `SKILL.md` skills
-- A Markdown knowledge base directory (e.g. an Obsidian vault)
+## 🚀 Quick start
 
-## Install
+**Requirements:** Python 3.8+ (stdlib only), any harness that loads `SKILL.md` skills, a Markdown knowledge base (e.g. an Obsidian vault).
+
+**1 — Get the skills**
 
 ```bash
 git clone https://github.com/Criss404/agent-kb-toolkit.git
 ```
 
-Make the skills discoverable by your harness — copy or symlink each skill folder into your skills directory:
+**2 — Make them discoverable** (copy or symlink into your skills directory)
 
 ```bash
-# Example: shared location scanned by OpenCode / Claude-compatible harnesses
 mkdir -p ~/.agents/skills
 ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.agents/skills/
-# Or per-harness, e.g. Claude Code:  ~/.claude/skills/    Qoder:  ~/.qoder/skills/
+# per-harness alternatives:  ~/.claude/skills/   ~/.qoder/skills/
 ```
 
-Then point the toolkit at your knowledge base (add to your shell profile or the harness's `AGENTS.md`):
+**3 — Point at your knowledge base** (shell profile or your harness's `AGENTS.md`)
 
 ```bash
 export KB_ROOT="/path/to/your/knowledge-base"
 ```
 
-Optional — auto-backup on session end/compaction: see `skills/archive-sessions/references/hook-recipes.md` for per-harness hook/plugin snippets. The skill can install these for you, but **only after showing you the exact config and getting your confirmation** (see Security).
+**4 — Talk to your agent**
 
-## Usage
+| Say | Get |
+|---|---|
+| `save to kb` / `记录本次会话` | this session curated into notes |
+| `expand note X` / `深化某篇笔记` | note upgraded to textbook grade |
+| `archive sessions` / `备份会话` | verbatim transcript backups |
 
-- `记录本次会话` / `save to kb` → curate this session into notes
-- `深化 <note>` / `expand note` → upgrade a note to textbook grade
-- `备份会话` / `archive sessions` → verbatim backup of transcripts
-- Or invoke explicitly: `/save-to-kb`, `/expand-note`, `/archive-sessions`
+Optional: auto-backup on session end — see [`hook-recipes.md`](skills/archive-sessions/references/hook-recipes.md).
 
-## Security
+## 🔒 Security model
 
-`archive-sessions` can write a session-end hook into your harness config (the "self-install" protocol). By design it is **idempotent** and **never writes silently** — it shows you the exact snippet and requires your confirmation first. Editing an agent's config is a known persistence vector; treat *any* skill that mutates your config with the same scrutiny.
+`archive-sessions` can install a session-end hook into your harness config (the *self-install protocol*). By design it is **idempotent** and **never writes silently** — it must show you the exact snippet and get your confirmation first. Config mutation is a known persistence vector; hold *any* skill that touches your config to this standard.
 
-## Notes on portability
+## 🌍 Portability
 
-- **Memory / Skill** are near-standard across harnesses; **Hooks are not** — Qoder & Claude Code share a shell-hook schema, OpenCode uses a JS plugin, Codex differs again. Recipes are provided per harness; unknown harnesses get a fallback protocol.
-- Harness-specific details (config paths, event names) are product-level knowledge that changes often — the skills tell the agent to check the harness's own docs rather than hardcoding.
+- **Memory / Skill** formats are near-standard across harnesses. **Hooks are not** — Qoder & Claude Code share a shell-hook schema, OpenCode uses a JS plugin, Codex differs again. Per-harness recipes are provided, plus a fallback protocol for unknown harnesses.
+- Harness-specific paths and event names are deliberately *not* hardcoded — the skills tell the agent to consult the harness's own docs, because that knowledge goes stale monthly.
 
-## License
+## 🤝 Contributing
 
-MIT © 2026 Criss404 (KLam111)
+Issues and PRs welcome — especially new harness adapters for `archive-sessions` (the `ADAPTER REGISTRY` comment in [`archive_sessions.py`](skills/archive-sessions/scripts/archive_sessions.py) shows the three-step recipe).
+
+## 📄 License
+
+[MIT](LICENSE) © 2026 Criss404
