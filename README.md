@@ -6,6 +6,7 @@
 
 Plain Markdown in → curated, textbook-grade notes out. No vector database required.
 
+[![CI](https://github.com/Criss404/agent-kb-toolkit/actions/workflows/validate.yml/badge.svg)](https://github.com/Criss404/agent-kb-toolkit/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](#-quick-start)
 [![SKILL.md](https://img.shields.io/badge/SKILL.md-compatible-8A2BE2.svg)](https://agentskills.io)
@@ -69,25 +70,31 @@ Design details baked in:
 
 **1 — Get the skills**
 
+One-liner (auto-detects your installed harnesses):
+
 ```bash
-git clone https://github.com/Criss404/agent-kb-toolkit.git
+npx skills add Criss404/agent-kb-toolkit
 ```
 
-**2 — Make them discoverable** (copy or symlink into your skills directory)
+<details>
+<summary>Or install manually (clone + symlink)</summary>
 
 ```bash
+git clone https://github.com/Criss404/agent-kb-toolkit.git
 mkdir -p ~/.agents/skills
 ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.agents/skills/
 # per-harness alternatives:  ~/.claude/skills/   ~/.qoder/skills/
 ```
 
-**3 — Point at your knowledge base** (shell profile or your harness's `AGENTS.md`)
+</details>
+
+**2 — Point at your knowledge base** (shell profile or your harness's `AGENTS.md`)
 
 ```bash
 export KB_ROOT="/path/to/your/knowledge-base"
 ```
 
-**4 — Talk to your agent**
+**3 — Talk to your agent**
 
 | Say | Get |
 |---|---|

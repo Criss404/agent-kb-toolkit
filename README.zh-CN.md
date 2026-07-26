@@ -6,6 +6,7 @@
 
 输入是普通 Markdown 目录 → 输出是经过策展、教材级的笔记。起步无需向量库。
 
+[![CI](https://github.com/Criss404/agent-kb-toolkit/actions/workflows/validate.yml/badge.svg)](https://github.com/Criss404/agent-kb-toolkit/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](#-快速开始)
 [![SKILL.md](https://img.shields.io/badge/SKILL.md-compatible-8A2BE2.svg)](https://agentskills.io)
@@ -69,25 +70,31 @@ flowchart LR
 
 **1 — 获取**
 
+一行命令(自动探测你装了哪些 harness):
+
 ```bash
-git clone https://github.com/Criss404/agent-kb-toolkit.git
+npx skills add Criss404/agent-kb-toolkit
 ```
 
-**2 — 让 harness 能发现**(复制或软链接到你的 skills 目录)
+<details>
+<summary>或手动安装(clone + 软链接)</summary>
 
 ```bash
+git clone https://github.com/Criss404/agent-kb-toolkit.git
 mkdir -p ~/.agents/skills
 ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.agents/skills/
 # 各家专属位置:  ~/.claude/skills/   ~/.qoder/skills/
 ```
 
-**3 — 指向你的知识库**(写进 shell 配置或 harness 的 `AGENTS.md`)
+</details>
+
+**2 — 指向你的知识库**(写进 shell 配置或 harness 的 `AGENTS.md`)
 
 ```bash
 export KB_ROOT="/path/to/your/knowledge-base"
 ```
 
-**4 — 直接对 agent 说话**
+**3 — 直接对 agent 说话**
 
 | 你说 | 得到 |
 |---|---|
