@@ -18,7 +18,7 @@ SKIP_DIRS = {".obsidian", ".git"}
 
 def main():
     if KB is None or not KB.is_dir():
-        print("ERROR: 环境变量 KB_ROOT 未设置或不是有效目录。请先 `export KB_ROOT=/path/to/your/knowledge-base`。", file=sys.stderr)
+        print("ERROR: 环境变量 KB_ROOT 未设置或不是有效目录 / env var KB_ROOT is unset or not a directory. Run: export KB_ROOT=/path/to/your/knowledge-base", file=sys.stderr)
         sys.exit(1)
     kws = [k.lower() for k in sys.argv[1:] if k.strip()]
     if not kws:

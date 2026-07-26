@@ -1,7 +1,7 @@
 # Hook 绑定配方(自安装协议用)
 
 > 使用前提:已通过 SKILL.md 第 0 步的幂等检查(当前 harness 无绑定),且**已向用户展示片段并获得同意**。
-> 通用原则:脚本路径优先用 `~/.agents/skills/archive-sessions/scripts/archive_sessions.py`(跨 harness 共享副本);备份目标只选当前 harness 自己(各绑各的,避免每家退出都全量扫描)。
+> 通用原则:下列配方中的脚本路径以 `~/.agents/skills/` 安装位置为例——**按你的实际安装位置调整**;备份目标只选当前 harness 自己(各绑各的,避免每家退出都全量扫描)。
 
 ## 1. Qoder(`~/.qoder/settings.json`)
 

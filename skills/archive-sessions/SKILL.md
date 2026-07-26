@@ -72,6 +72,7 @@ ${AGENT_ARCHIVE_DIR:-~/sessionbackup}/<harness>/<日期>_<项目>_<sessionID后8
 
 - session 文件格式属产品/厂商层知识(月级半衰期),harness 大版本升级后若解析失败,需检查格式变化并更新脚本适配器
 - 正在进行中的 session 每次运行都会重新导出(源文件持续增长,属正常增量行为)
+- Qoder 与 OpenCode 适配器经真实数据验证;Claude Code 适配器基于同族格式实现,**尚未经真实数据验证**,首次使用时抽查输出
 
 ## Resources
 
