@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧰 agent-kb-toolkit
+<img src=".github/assets/banner.png" alt="agent-kb-toolkit banner" width="800" />
 
 **Turn any coding-agent harness into a disciplined personal knowledge-base builder.**
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧰 agent-kb-toolkit
+<img src=".github/assets/banner.png" alt="agent-kb-toolkit banner" width="800" />
 
 **把任意 coding-agent harness 变成纪律严明的个人知识库工具链。**
 
