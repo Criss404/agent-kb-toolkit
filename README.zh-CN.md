@@ -2,6 +2,8 @@
 
 <img src=".github/assets/banner.png" alt="agent-kb-toolkit banner" width="800" />
 
+# 🧰 agent-kb-toolkit
+
 **把任意 coding-agent harness 变成纪律严明的个人知识库工具链。**
 
 输入是普通 Markdown 目录 → 输出是经过策展、教材级的笔记。起步无需向量库。
@@ -18,6 +20,17 @@
 </div>
 
 ---
+
+**agent-kb-toolkit** 是三个 `SKILL.md` skill 的组合,教会你的 coding agent(Qoder、Claude Code、OpenCode…)像一位纪律严明的图书管理员那样维护个人知识库:对话被提炼成格式规范、查重去重、标注来源的笔记;任何一篇笔记都能深化成教材级学习材料;每场原始会话由零 token 脚本逐字备份。它直接运行在普通 Markdown 目录上——Obsidian 仓库就很完美——**不需要向量库、不需要 embedding API、不需要任何框架**。
+
+## ⚡ 功能特性
+
+- 📝 **一句话把对话变成规范笔记**——MOC 索引、wiki 互链、来源标注,遵循成文的写作规范(Diátaxis 类型、术语与排版约定)
+- 🔍 **写前查重**——脚本先筛出相关候选笔记,记录成本保持 `O(候选)` 而非 `O(全库)`
+- 📚 **教材模式**——把任意笔记深化为含原理展开、示例与反例、误区 FAQ、自测题的深度内容,基于多来源联网研究
+- 💾 **零 token 逐字备份**——每场会话由纯脚本归档为 Markdown,不受上下文压缩影响
+- 🧩 **自扩展**——遇到未知 harness?skill 会引导 agent 自己写适配器并注册
+- 🔒 **先确认再自动化**——hook 必须先展示确切配置片段、经你同意才写入
 
 ## ✨ 设计理念
 

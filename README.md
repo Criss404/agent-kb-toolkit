@@ -2,6 +2,8 @@
 
 <img src=".github/assets/banner.png" alt="agent-kb-toolkit banner" width="800" />
 
+# 🧰 agent-kb-toolkit
+
 **Turn any coding-agent harness into a disciplined personal knowledge-base builder.**
 
 Plain Markdown in → curated, textbook-grade notes out. No vector database required.
@@ -18,6 +20,17 @@ Plain Markdown in → curated, textbook-grade notes out. No vector database requ
 </div>
 
 ---
+
+**agent-kb-toolkit** is a set of three `SKILL.md` skills that teach your coding agent (Qoder, Claude Code, OpenCode, …) to maintain a personal knowledge base the way a disciplined librarian would: conversations get distilled into properly formatted, deduplicated, source-cited notes; any note can be deepened into textbook-grade study material; and every raw session is backed up verbatim by a zero-token script. It runs on any plain Markdown folder — an Obsidian vault is perfect — with **no vector database, no embedding API, no framework**.
+
+## ⚡ Features
+
+- 📝 **Conversation → clean notes, one sentence** — MOC-indexed, wiki-linked, source-labelled, following a written standard (Diátaxis types, terminology and typography rules)
+- 🔍 **Write-time dedup** — a script shortlists related notes first, so recording cost stays `O(candidates)`, not `O(knowledge base)`
+- 📚 **Textbook mode** — deepen any note with principles, examples & counter-examples, FAQ and self-tests, grounded in multi-source web research
+- 💾 **Zero-token verbatim backups** — every session archived to Markdown by a plain script; immune to context compaction
+- 🧩 **Self-extending** — unknown harness? The skill guides the agent to write and register a new adapter by itself
+- 🔒 **Consent-first automation** — hooks install only after showing you the exact config snippet
 
 ## ✨ Why this exists
 
