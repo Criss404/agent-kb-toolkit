@@ -19,3 +19,5 @@ jobs:
         run: python .github/scripts/validate_skills.py
       - name: Byte-compile bundled scripts
         run: python -m compileall -q skills
+      - name: Run script smoke tests
+        run: python -m unittest discover -s tests

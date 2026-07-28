@@ -94,9 +94,21 @@ npx skills add Criss404/agent-kb-toolkit
 
 ```bash
 git clone https://github.com/Criss404/agent-kb-toolkit.git
-mkdir -p ~/.agents/skills
-ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.agents/skills/
-# 各家专属位置:  ~/.claude/skills/   ~/.qoder/skills/
+```
+
+把 skills 软链接到你的 harness 加载 skill 的目录:
+
+| Harness | Skills 目录 |
+|---|---|
+| Claude Code | `~/.claude/skills/` |
+| Qoder | `~/.qoder/skills/` |
+| OpenCode | 见 [Agent Skills 文档](https://opencode.ai/docs/skills/) |
+| 多 harness 共用 | `~/.agents/skills/` |
+
+```bash
+# 示例 — Claude Code:
+mkdir -p ~/.claude/skills
+ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.claude/skills/
 ```
 
 </details>
@@ -128,7 +140,7 @@ export KB_ROOT="/path/to/your/knowledge-base"
 
 ## 🤝 参与贡献
 
-欢迎 Issue 和 PR——尤其欢迎为 `archive-sessions` 添加新 harness 适配器([`archive_sessions.py`](skills/archive-sessions/scripts/archive_sessions.py) 内的 `ADAPTER REGISTRY` 注释给出了三步接入法)。
+欢迎 Issue 和 PR——尤其欢迎为 `archive-sessions` 添加新 harness 适配器。详见 **[CONTRIBUTING.md](CONTRIBUTING.md)**:SKILL.md 结构、frontmatter 规则、三步适配器接入法。
 
 ## 📄 许可证
 

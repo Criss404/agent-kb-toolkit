@@ -94,9 +94,21 @@ npx skills add Criss404/agent-kb-toolkit
 
 ```bash
 git clone https://github.com/Criss404/agent-kb-toolkit.git
-mkdir -p ~/.agents/skills
-ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.agents/skills/
-# per-harness alternatives:  ~/.claude/skills/   ~/.qoder/skills/
+```
+
+Symlink the skills into wherever your harness loads skills from:
+
+| Harness | Skills directory |
+|---|---|
+| Claude Code | `~/.claude/skills/` |
+| Qoder | `~/.qoder/skills/` |
+| OpenCode | see [Agent Skills docs](https://opencode.ai/docs/skills/) |
+| Shared (multiple harnesses) | `~/.agents/skills/` |
+
+```bash
+# example — Claude Code:
+mkdir -p ~/.claude/skills
+ln -s "$PWD/agent-kb-toolkit/skills/"* ~/.claude/skills/
 ```
 
 </details>
@@ -128,7 +140,7 @@ Optional: auto-backup on session end — see [`hook-recipes.md`](skills/archive-
 
 ## 🤝 Contributing
 
-Issues and PRs welcome — especially new harness adapters for `archive-sessions` (the `ADAPTER REGISTRY` comment in [`archive_sessions.py`](skills/archive-sessions/scripts/archive_sessions.py) shows the three-step recipe).
+Issues and PRs welcome — especially new harness adapters for `archive-sessions`. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the SKILL.md structure, frontmatter rules, and the three-step adapter recipe.
 
 ## 📄 License
 
