@@ -35,27 +35,45 @@ def slugify(text, maxlen=36):
 
 
 def derive_title(records):
-    """Session name priority: official title record > first user text."""
+    """Return (session name, has_official_title).
+    优先级:官方标题记录 > 最近一次 /branch 之后的首条用户输入(fork 分支的
+    第一句话,母本历史里没有它) > 全文首条用户输入。"""
     title = ""
     for rec in records:
         if rec.get("type") == "ai-title" and rec.get("aiTitle"):
-            title = rec["aiTitle"]  # Qoder:取最后一条为当前标题(/rename 也写这里)
+            title = rec["aiTitle"]  # Qoder:取最后一条为当前标题(注:手动 /rename 的名字存于加密 state,读不到)
         elif rec.get("type") == "summary" and rec.get("summary"):
             title = rec["summary"]  # Claude Code 同族格式
     if title:
-        return slugify(title)
-    for rec in records:
-        if rec.get("type") != "user":
-            continue
-        c = rec.get("message", {}).get("content", "")
-        if isinstance(c, list):
-            c = " ".join(
-                b.get("text", "") for b in c if isinstance(b, dict) and b.get("type") == "text"
-            )
-        name = slugify(c)
+        return slugify(title), True
+
+    def first_user_text(start):
+        for rec in records[start:]:
+            if rec.get("type") != "user":
+                continue
+            c = rec.get("message", {}).get("content", "")
+            if isinstance(c, list):
+                c = " ".join(
+                    b.get("text", "") for b in c if isinstance(b, dict) and b.get("type") == "text"
+                )
+            name = slugify(c)
+            if name:
+                return name
+        return ""
+
+    last_branch = -1
+    for i, rec in enumerate(records):
+        if rec.get("type") == "user":
+            c = rec.get("message", {}).get("content", "")
+            # 局限:仅识别 Qoder/Claude 的 /branch 命令痕迹;其他 harness 的
+            # 会话分叉命令(如某家的 /fork)需在此另加匹配串,否则静默漏检
+            if isinstance(c, str) and "<command-name>/branch</command-name>" in c:
+                last_branch = i
+    if last_branch >= 0:
+        name = first_user_text(last_branch + 1)
         if name:
-            return name
-    return ""
+            return name, False
+    return first_user_text(0), False
 
 
 def log(msg):
@@ -132,8 +150,15 @@ def convert_jsonl(src: Path, harness: str, project: str) -> int:
         render_content(rec.get("message", {}).get("content", ""), lines)
     if not lines:
         return 0
-    date = ts_to_str(first_ts)[:10] if first_ts else datetime.now().strftime("%Y-%m-%d")
-    name = derive_title(records) or project
+    title, official = derive_title(records)
+    name = title or project
+    # 有官方标题:日期用会话首条消息时间(会话开始日)。
+    # 无官方标题(常见于 fork 分支,历史继承自母本、连开场时间都一样):
+    # 日期改用文件最后修改日,让分支按"最近活动"排序可辨认。
+    if official and first_ts:
+        date = ts_to_str(first_ts)[:10]
+    else:
+        date = datetime.fromtimestamp(src.stat().st_mtime).strftime("%Y-%m-%d")
     out = BASE / harness / f"{date}_{name}_{sid8}.md"
     if out.exists() and out.stat().st_mtime >= src.stat().st_mtime:
         return 0
@@ -181,11 +206,14 @@ def archive_opencode() -> tuple[int, int]:
             import tempfile
             with tempfile.NamedTemporaryFile(mode="w+", suffix=".json", delete=False) as tf:
                 tmp_path = tf.name
-            with open(tmp_path, "w") as fh:
-                subprocess.run(["opencode", "export", sid], stdout=fh,
-                               stderr=subprocess.DEVNULL, timeout=120, check=True)
-            data = json.loads(Path(tmp_path).read_text(encoding="utf-8", errors="replace"))
-            os.unlink(tmp_path)
+            try:
+                with open(tmp_path, "w") as fh:
+                    subprocess.run(["opencode", "export", sid], stdout=fh,
+                                   stderr=subprocess.DEVNULL, timeout=120, check=True)
+                data = json.loads(Path(tmp_path).read_text(encoding="utf-8", errors="replace"))
+            finally:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
         except Exception as e:
             log(f"[opencode] export failed for {sid}: {e}")
             continue
@@ -227,7 +255,7 @@ def archive_opencode() -> tuple[int, int]:
 #   2. 否则仿照 archive_opencode() 写一个 archive_<tool>() 函数。
 #      探测提示:~/.<tool>/(sessions|projects|history)/、~/.local/share/<tool>/、
 #      或该工具自带的 session list / export CLI。
-#   3. 在下方 ADAPTERS 注册,并同步 ~/.qoder 与 ~/.agents 两份 skill 副本。
+#   3. 在下方 ADAPTERS 注册,并把更新同步到各 harness 的本工具包安装位置。
 # ---------------------------------------------------------------------------
 ADAPTERS = {
     "qoder": lambda: archive_jsonl_tree(Path.home() / ".qoder" / "projects", "qoder"),

@@ -7,6 +7,22 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- **`skills/save-to-kb` — cold-start bootstrap** — when the KB root has no structure file (`知识库结构.md` / `STRUCTURE.md`), the skill asks the user and scaffolds one from `assets/structure-template.md` instead of guessing the layout.
+- **`skills/save-to-kb/assets/ops-template.md`** — skeleton/recipe template for How-to operation manuals (骨架-配方分离: cross-tool skeleton + per-harness recipe with verification dates).
+- **`skills/save-to-kb` — operation-manual mode (模式 C)** — records operations as skeleton + per-harness recipes; plain-language sentences with minimal jargon, knowledge linked not expanded.
+- **`skills/save-to-kb/references/standards.md` — §6 depth calibration** — L0–L5 tech-stack depth rules; summary-level and teaching-level notes share the same writing quality bar.
+- **`skills/save-to-kb/scripts/find_related.py` — curated-dirs scanning** — reads the ````curated-dirs```` block of the structure file; falls back to whole-KB scan when absent; missing `KB_ROOT` is now a hard error.
+- **`skills/archive-sessions` — fork-aware session titles** — prefers the first user message after a `/branch` fork marker, so forked sessions no longer inherit the parent's title.
+- **`skills/expand-note` — write-time dedup for new topics** — runs `find_related.py` before creating a new-topic note; human-navigation-layer maintenance is now a conditional clause driven by the structure file.
+
+### Changed
+- **`skills/save-to-kb/SKILL.md`** — the 1.5 compression-guard clause now invokes archive-sessions via an install-dir placeholder instead of a hardcoded path; human-navigation-layer step is conditional on the structure file declaring one.
+- **`skills/save-to-kb/references/standards.md`** — prose rules keep their generic form without personal examples.
+- **`skills/save-to-kb/references/style-examples.md`** — example command uses a repo-relative path.
+- **`skills/expand-note/SKILL.md`** — removed personal series prefix from the description; internal references use in-toolkit relative paths.
+- **`skills/archive-sessions/*`** — install-sync instructions generalized to "sync to all installed harnesses".
+
 ## [0.1.0] - 2026-07-27
 
 ### Added

@@ -23,10 +23,10 @@ python3 <本skill目录>/scripts/archive_sessions.py [qoder|claude|opencode|all]
 ## 输出位置
 
 ```
-${AGENT_ARCHIVE_DIR:-~/sessionbackup}/<harness>/<日期>_<项目>_<sessionID后8位>.md
+${AGENT_ARCHIVE_DIR:-~/sessionbackup}/<harness>/<日期>_<标题或项目>_<sessionID后8位>.md
 ```
 
-- 默认 `~/sessionbackup/`;设置环境变量 `AGENT_ARCHIVE_DIR` 可重定向(如 WSL 上指向 /mnt/d 防止 WSL 重置丢失)
+- 默认 `~/sessionbackup/`;设置环境变量 `AGENT_ARCHIVE_DIR` 可重定向(如 WSL 上指向持久化存储,防止 WSL 重置丢失)
 - 备份档案**不进知识库**,与 save-to-kb 的策展笔记严格分离
 
 ## 数据来源(适配器)
@@ -61,7 +61,7 @@ ${AGENT_ARCHIVE_DIR:-~/sessionbackup}/<harness>/<日期>_<项目>_<sessionID后8
 | Qoder | `grep -q auto-archive-sessions ~/.qoder/settings.json` | recipes 第 1 节(hooks.SessionEnd) |
 | Claude Code | `grep -q auto-archive-sessions ~/.claude/settings.json` | recipes 第 2 节(同族 schema) |
 | OpenCode | `ls ~/.config/opencode/plugin/archive-sessions.js` | recipes 第 3 节(JS plugin) |
-| 其他 harness | — | 查该家官方文档的 session 生命周期 hook/plugin 机制,做等效绑定;完成后把新配方补进 recipes 并同步两份 skill 副本 |
+| 其他 harness | — | 查该家官方文档的 session 生命周期 hook/plugin 机制,做等效绑定;完成后把新配方补进 recipes 并同步到各安装位置 |
 
 ## 执行后必做
 
